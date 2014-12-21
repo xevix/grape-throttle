@@ -4,6 +4,11 @@ The grape-throttle gem provides a simple endpoint-specific throttling mechanism 
 
 WARNING: this gem is still in early development and is not recommended for production use.
 
+## Requirements
+
+* Grape >= 0.10.0
+* Redis
+
 ## Usage
 
 ### Build and Install
