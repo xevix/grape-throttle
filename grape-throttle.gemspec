@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'redis'
 
-  s.files = ["lib/grape-throttle.rb"]
+  s.files = ["lib/grape-throttle.rb", "lib/grape/extensions/throttle_extension.rb", "lib/grape/middleware/throttle_middleware.rb"]
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ['lib']
 end
