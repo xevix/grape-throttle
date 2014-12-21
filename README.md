@@ -13,14 +13,7 @@ WARNING: this gem is still in early development and is not recommended for produ
 
 ### Build and Install
 
-To use, first build the gem and install locally. It will be added to RubyGems later.
-
-```bash
-gem build grape-throttle.gemspec
-gem install grape-throttle
-```
-
-Require it in your Gemfile
+To use, just install the gem from RubyGems or via Bundler by requiring it in your Gemfile.
 
 ```
 gem 'grape-throttle'
