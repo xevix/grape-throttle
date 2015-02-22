@@ -2,8 +2,6 @@
 
 The grape-throttle gem provides a simple endpoint-specific throttling mechanism for Grape.
 
-WARNING: this gem is still in early development and is not recommended for production use.
-
 ## Requirements
 
 * Grape >= 0.10.0
