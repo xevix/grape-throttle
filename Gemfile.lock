@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    grape-throttle (0.0.0)
+    grape-throttle (0.0.1)
+      grape (>= 0.10.0)
       redis
 
 GEM
@@ -78,7 +79,6 @@ PLATFORMS
 DEPENDENCIES
   bundler
   fakeredis (~> 0.3.0)
-  grape (= 0.10.0)
   grape-throttle!
   rack-test
   rspec (~> 3.0)
