@@ -49,13 +49,24 @@ This gem adds a `throttle` DSL-like method that can be used to throttle differen
 
 The `throttle` method takes a Hash of the period to throttle, and the maximum allowed hits. After the maximum, the middleware throws an error with Grape's `error!` function.
 
-Supported periods are: `:hourly`, `:daily`, `:monthly`.
+Supported predefined periods are: `:hourly`, `:daily`, `:monthly`.
 
 Example:
 
 ```ruby
 class API < Grape::API
   resources :users do
+
+    # Allow start of competition only every 10 minutes
+    desc "Start competition"
+    throttle period: 10.minutes, limit: 1
+    params do
+      requires :id, type: Integer, desc: "id"
+    end
+    post "/:id/competition" do
+      User.find(params[:id]).start_competition
+    end
+
     # 3 times a day max
     desc "Fetch a user"
     throttle daily: 3

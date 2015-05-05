@@ -11,6 +11,9 @@ module Grape
           period = 1.day
         elsif limit = throttle_options[:monthly]
           period = 1.month
+        elsif throttle_options[:period] && throttle_options[:limit]
+          limit = throttle_options[:limit]
+          period = throttle_options[:period]
         end
 
         user_key = options[:user_key]
