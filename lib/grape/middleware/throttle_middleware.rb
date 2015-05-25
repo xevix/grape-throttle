@@ -11,9 +11,11 @@ module Grape
           period = 1.day
         elsif limit = throttle_options[:monthly]
           period = 1.month
-        elsif throttle_options[:period] && throttle_options[:limit]
+        elsif period = throttle_options[:period]
           limit = throttle_options[:limit]
-          period = throttle_options[:period]
+        end
+        if limit.nil? || period.nil?
+          raise ArgumentError.new('Please set a period and limit (see documentation)')
         end
 
         user_key = options[:user_key]

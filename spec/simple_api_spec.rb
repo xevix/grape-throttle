@@ -10,8 +10,17 @@ describe "ThrottleHelper" do
         "step on it"
       end
 
+      get('/no-throttle') do
+        "step on it"
+      end
+
       throttle period: 10.minutes, limit: 3
       get('/throttle-custom-period') do
+        "step on it"
+      end
+
+      throttle
+      get('/wrong-configuration') do
         "step on it"
       end
     end
@@ -45,5 +54,17 @@ describe "ThrottleHelper" do
       end
 
     end
+
+    it "throws an error if period or limit is missing" do
+      expect { get("wrong-configuration") }.to raise_exception
+    end
+
+    it "only throttles if explicitly specified" do
+      expect do
+        10.times { get "/no-throttle" }
+      end.not_to raise_exception
+      expect(last_response.status).to eq(200)
+    end
+
   end
 end
