@@ -1,5 +1,6 @@
 require 'grape'
 require 'grape/extensions/throttle_extension'
+require 'logger'
 
 module Grape
   module Middleware
