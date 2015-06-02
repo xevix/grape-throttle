@@ -3,6 +3,7 @@ module Grape
     class ThrottleMiddleware < Grape::Middleware::Base
       def before
         endpoint = env['api.endpoint']
+        logger   = options[:logger] || Logger.new(STDOUT)
         return unless throttle_options = endpoint.route_setting(:throttle)
 
         if limit = throttle_options[:hourly]
@@ -27,14 +28,20 @@ module Grape
         rate_key = "#{r.route_method}:#{r.route_path}:#{user_value}"
 
         redis = options[:cache]
-        current = redis.get(rate_key).to_i
-        if !current.nil? && current >= limit
-          endpoint.error!("too many requests, please try again later", 403)
-        else
-          redis.multi do
-            redis.incr(rate_key)
-            redis.expire(rate_key, period.to_i)
+        begin
+          redis.ping
+          current = redis.get(rate_key).to_i
+          if !current.nil? && current >= limit
+            endpoint.error!("too many requests, please try again later", 403)
+          else
+            redis.multi do
+              redis.incr(rate_key)
+              redis.expire(rate_key, period.to_i)
+            end
           end
+
+        rescue Exception => e
+          logger.warn(e.message)
         end
 
       end

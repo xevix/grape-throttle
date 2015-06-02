@@ -67,4 +67,17 @@ describe "ThrottleHelper" do
     end
 
   end
+
+  describe 'Redis down' do
+    before do
+      expect_any_instance_of(Redis).to receive(:ping){ raise Exception }
+      allow($stdout).to receive(:write)
+    end
+
+    it 'should work when redis is down' do
+      get "/throttle"
+      expect(last_response.status).to eq(200)
+    end
+
+  end
 end
