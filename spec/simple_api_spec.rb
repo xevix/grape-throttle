@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "ThrottleHelper" do
   subject do
     Class.new(Grape::API) do
-      use Grape::Middleware::ThrottleMiddleware, cache: Redis.new
+      use Grape::Middleware::ThrottleMiddleware, cache: Redis.new, logger: Logger.new('logfile.log')
 
       throttle daily: 3
       get('/throttle') do
@@ -64,6 +64,24 @@ describe "ThrottleHelper" do
         10.times { get "/no-throttle" }
       end.not_to raise_exception
       expect(last_response.status).to eq(200)
+    end
+
+  end
+
+  describe 'Redis down' do
+    before do
+      expect_any_instance_of(Redis).to receive(:ping){ raise Exception }
+    end
+
+    it 'should work when redis is down' do
+      get "/throttle"
+      expect(last_response.status).to eq(200)
+    end
+
+    it 'should log error when redis is down' do
+      get "/throttle"
+      expect(last_response.status).to eq(200)
+      expect(File.read('logfile.log')).to match(/WARN/)
     end
 
   end

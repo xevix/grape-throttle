@@ -3,6 +3,7 @@ module Grape
     class ThrottleMiddleware < Grape::Middleware::Base
       def before
         endpoint = env['api.endpoint']
+        logger   = options[:logger] || Logger.new(STDOUT)
         return unless throttle_options = endpoint.route_setting(:throttle)
 
         if limit = throttle_options[:hourly]
@@ -40,7 +41,6 @@ module Grape
           end
 
         rescue Exception => e
-          logger = Logger.new(STDOUT)
           logger.warn(e.message)
         end
 
