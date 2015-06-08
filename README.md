@@ -43,6 +43,14 @@ In this more advanced case, the Redis instance is in the global variable `$redis
 
 The `user_key` parameter is a function that can be used to determine a custom identifier for a user. This key is used to form the Redis key to identify this user uniquely. It defaults to the IP address. The `env` parameter given to the function is the Rack environment and can be used to determine information about the caller.
 
+**Logging**
+
+The gem will log errors to STDOUT by default. If you prefer a different logger you can use the `logger` option to pass in your own logger.
+
+```ruby
+use Grape::Middleware::ThrottleMiddleware, cache: Redis.new, logger: Logger.new('my_custom_log.log')
+```
+
 ### Endpoint Usage
 
 This gem adds a `throttle` DSL-like method that can be used to throttle different endpoints differently.
