@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'grape-throttle'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Alejandro Wainzinger']
   s.email       = ['alejandro.wainzinger@gmail.com']
