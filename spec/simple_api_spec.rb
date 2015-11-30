@@ -76,7 +76,7 @@ describe "ThrottleHelper" do
   describe "requests just below the period" do
     it "do not get throttled by the rate limit" do
       4.times do
-        get "/throttle"
+        get "/really-short-throttle"
         sleep 4
       end
 
