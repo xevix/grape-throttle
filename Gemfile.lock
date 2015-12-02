@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    grape-throttle (0.0.3)
+    grape-throttle (0.0.4)
       grape (>= 0.10.0)
       redis (~> 3.2)
 
