@@ -23,6 +23,11 @@ describe "ThrottleHelper" do
       get('/wrong-configuration') do
         "step on it"
       end
+
+      throttle period: 2.seconds, limit: 3
+      get('/really-short-throttle') do
+        "step on it"
+      end
     end
   end
 
@@ -66,6 +71,17 @@ describe "ThrottleHelper" do
       expect(last_response.status).to eq(200)
     end
 
+  end
+
+  describe "requests just below the period" do
+    it "do not get throttled by the rate limit" do
+      4.times do
+        get "/really-short-throttle"
+        sleep 1
+      end
+
+      expect(last_response.status).to eq(200)
+    end
   end
 
   describe 'Redis down' do
