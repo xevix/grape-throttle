@@ -24,7 +24,7 @@ describe "ThrottleHelper" do
         "step on it"
       end
 
-      throttle period: 5.seconds, limit: 3
+      throttle period: 2.seconds, limit: 3
       get('/really-short-throttle') do
         "step on it"
       end
@@ -77,7 +77,7 @@ describe "ThrottleHelper" do
     it "do not get throttled by the rate limit" do
       4.times do
         get "/really-short-throttle"
-        sleep 4
+        sleep 1
       end
 
       expect(last_response.status).to eq(200)
