@@ -43,7 +43,7 @@ describe "ThrottleHelper" do
 
     it "is throttled beyond the rate limit" do
       4.times { get "/throttle" }
-      expect(last_response.status).to eq(403)
+      expect(last_response.status).to eq(429)
     end
 
     describe "with custom period" do
@@ -55,7 +55,7 @@ describe "ThrottleHelper" do
 
       it "is throttled beyond the rate limit" do
         4.times { get "/throttle-custom-period" }
-        expect(last_response.status).to eq(403)
+        expect(last_response.status).to eq(429)
       end
 
     end
