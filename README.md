@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/xevix/grape-throttle.svg)](https://travis-ci.org/xevix/grape-throttle)
+
 ## Overview
 
 The grape-throttle gem provides a simple endpoint-specific throttling mechanism for Grape.
