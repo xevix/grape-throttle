@@ -25,15 +25,15 @@ gem 'grape-throttle'
 
 Then in your Grape API, install the middleware which will do the throttling. At a minimum, it requires a Redis instance for caching as the `cache` parameter.
 
-**Simple Case**
-
 ```ruby
 use Grape::Middleware::ThrottleMiddleware, cache: Redis.new
 ```
 
 In this simple case, you just set up the middleware, and pass it a Redis instance.
 
-**Advanced Case**
+#### Custom key for request matching
+
+It is possible to provide anonymous function for building an identifier for the request:
 
 ```ruby
 use Grape::Middleware::ThrottleMiddleware, cache: $redis, user_key: ->(env) do
@@ -46,6 +46,14 @@ end
 In this more advanced case, the Redis instance is in the global variable `$redis`.
 
 The `user_key` parameter is a function that can be used to determine a custom identifier for a user. This key is used to form the Redis key to identify this user uniquely. It defaults to the IP address. The `env` parameter given to the function is the Rack environment and can be used to determine information about the caller.
+
+#### Conditional rate limit
+
+It is possible to provide anonymous function for the condition check. In the following example, rate limit will be controlled only in the `production` environment
+
+```ruby
+use Grape::Middleware::ThrottleMiddleware, cache: Redis.new, if: -> { ENV.fetch("RACK_ENV").eql?("production") }
+```
 
 **Logging**
 
