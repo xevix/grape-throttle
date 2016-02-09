@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "ThrottleHelper" do
-  subject do
+  subject(:app) do
     Class.new(Grape::API) do
       use Grape::Middleware::ThrottleMiddleware, cache: Redis.new
 
@@ -31,10 +31,6 @@ describe "ThrottleHelper" do
     end
   end
 
-  def app
-    subject
-  end
-
   describe "#throttle" do
     it "is not throttled within the rate limit" do
       3.times { get "/throttle" }
@@ -47,7 +43,6 @@ describe "ThrottleHelper" do
     end
 
     describe "with custom period" do
-
       it "is not throttled within the rate limit" do
         3.times { get "/throttle-custom-period" }
         expect(last_response.status).to eq(200)
@@ -57,7 +52,6 @@ describe "ThrottleHelper" do
         4.times { get "/throttle-custom-period" }
         expect(last_response.status).to eq(429)
       end
-
     end
 
     it "throws an error if period or limit is missing" do
@@ -94,6 +88,5 @@ describe "ThrottleHelper" do
       get "/throttle"
       expect(last_response.status).to eq(200)
     end
-
   end
 end
