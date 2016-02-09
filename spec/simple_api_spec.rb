@@ -65,6 +65,32 @@ describe "ThrottleHelper" do
       expect(last_response.status).to eq(200)
     end
 
+    context "when condition is present" do
+      subject(:app) do
+        Class.new(Grape::API) do
+          use Grape::Middleware::ThrottleMiddleware, cache: Redis.new, if: -> { ENV.fetch("RACK_ENV").eql?("prd") }
+
+          throttle daily: 1
+          get('/throttle') do
+            "step on it"
+          end
+        end
+      end
+
+      it "is throttled beyond the rate limit" do
+        2.times { get "/throttle" }
+        expect(last_response.status).to eq(429)
+      end
+
+      context "when condition is not fulfilled" do
+        before { ENV["RACK_ENV"] = "prd" }
+
+        it "is not throttled" do
+          2.times { get "/throttle" }
+          expect(last_response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "requests just below the period" do

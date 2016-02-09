@@ -3,8 +3,11 @@ module Grape
     class ThrottleMiddleware < Grape::Middleware::Base
       COUNTER_START = 0
       def before
-        endpoint = env['api.endpoint']
-        logger   = options[:logger] || Logger.new(STDOUT)
+        endpoint  = env['api.endpoint']
+        logger    = options[:logger] || Logger.new(STDOUT)
+        condition = options[:if]
+
+        return if condition.present? && condition.call
         return unless throttle_options = endpoint.route_setting(:throttle)
 
         if limit = throttle_options[:hourly]
@@ -42,13 +45,10 @@ module Grape
               redis.incr(rate_key)
             end
           end
-
         rescue Exception => e
           logger.warn(e.message)
         end
-
       end
-
     end
   end
 end
