@@ -1,5 +1,6 @@
 require 'grape-throttle'
 require 'fakeredis'
+require 'rspec/timecop'
 
 require 'rubygems'
 require 'bundler'

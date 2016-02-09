@@ -24,7 +24,7 @@ describe "ThrottleHelper" do
         "step on it"
       end
 
-      throttle period: 2.seconds, limit: 3
+      throttle period: 1.seconds, limit: 3
       get('/really-short-throttle') do
         "step on it"
       end
@@ -94,12 +94,13 @@ describe "ThrottleHelper" do
   end
 
   describe "requests just below the period" do
-    it "do not get throttled by the rate limit" do
-      4.times do
-        get "/really-short-throttle"
-        sleep 1
-      end
+    let(:now) { Time.now.utc }
 
+    it "do not get throttled by the rate limit" do
+      Timecop.freeze(now - 1) do
+        3.times { get "/really-short-throttle" }
+      end
+      get "/really-short-throttle"
       expect(last_response.status).to eq(200)
     end
   end
