@@ -4,6 +4,12 @@ Grape Throttle
 [![Gem Version](https://badge.fury.io/rb/grape-throttle.svg)](https://badge.fury.io/rb/grape-throttle)
 [![Build Status](https://travis-ci.org/xevix/grape-throttle.svg)](https://travis-ci.org/xevix/grape-throttle)
 
+**Deprecation Warning**
+
+This gem is no longer being actively maintained. For similar throttle functionality see [rack-attack](https://github.com/kickstarter/rack-attack). Integration of this gem with rack-attack is a future consideration.
+
+**Description**
+
 The grape-throttle gem provides a simple endpoint-specific throttling mechanism for Grape.
 
 ## Requirements
