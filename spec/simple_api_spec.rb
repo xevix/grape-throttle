@@ -28,6 +28,11 @@ describe "ThrottleHelper" do
       get('/really-short-throttle') do
         "step on it"
       end
+
+      throttle period: 1.minute, limit: Proc.new { 1 }
+      get('/throttle-proc-limit') do
+        "step on it"
+      end
     end
   end
 
@@ -55,6 +60,20 @@ describe "ThrottleHelper" do
 
       it "is throttled beyond the rate limit" do
         4.times { get "/throttle-custom-period" }
+        expect(last_response.status).to eq(429)
+      end
+
+    end
+
+    describe 'proc limit' do
+
+      it "is not throttled within the rate limit" do
+        get "/throttle-proc-limit"
+        expect(last_response.status).to eq(200)
+      end
+
+      it "is throttled beyond the rate limit" do
+        2.times { get "/throttle-proc-limit" }
         expect(last_response.status).to eq(429)
       end
 

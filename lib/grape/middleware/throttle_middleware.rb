@@ -20,6 +20,8 @@ module Grape
           raise ArgumentError.new('Please set a period and limit (see documentation)')
         end
 
+        limit = limit.call(env) if limit.is_a? Proc
+
         user_key = options[:user_key]
         user_value = nil
         user_value = user_key.call(env) unless user_key.nil?
