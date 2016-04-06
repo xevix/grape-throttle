@@ -90,7 +90,7 @@ describe "ThrottleHelper" do
     end
 
     it "throws an error if period or limit is missing" do
-      expect { get("wrong-configuration") }.to raise_exception
+      expect { get("wrong-configuration") }.to raise_exception ArgumentError, 'Please set a period and limit (see documentation)'
     end
 
     it "only throttles if explicitly specified" do

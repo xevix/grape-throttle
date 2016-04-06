@@ -29,7 +29,7 @@ module Grape
         user_value ||= "ip:#{env['REMOTE_ADDR']}"
 
         r = endpoint.routes.first
-        rate_key = "#{r.route_method}:#{r.route_path}:#{user_value}"
+        rate_key = "#{r.request_method}:#{r.path}:#{user_value}"
 
         redis = options[:cache]
         begin
