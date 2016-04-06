@@ -21,6 +21,7 @@ module Grape
         end
 
         limit = limit.call(env) if limit.is_a? Proc
+        return true if limit < 0
 
         user_key = options[:user_key]
         user_value = nil
