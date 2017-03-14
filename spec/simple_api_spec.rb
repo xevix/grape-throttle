@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "ThrottleHelper" do
-  subject do
+  subject(:app) do
     Class.new(Grape::API) do
       use Grape::Middleware::ThrottleMiddleware, cache: Redis.new
 
@@ -24,15 +24,11 @@ describe "ThrottleHelper" do
         "step on it"
       end
 
-      throttle period: 2.seconds, limit: 3
+      throttle period: 1.seconds, limit: 3
       get('/really-short-throttle') do
         "step on it"
       end
     end
-  end
-
-  def app
-    subject
   end
 
   describe "#throttle" do
@@ -47,7 +43,6 @@ describe "ThrottleHelper" do
     end
 
     describe "with custom period" do
-
       it "is not throttled within the rate limit" do
         3.times { get "/throttle-custom-period" }
         expect(last_response.status).to eq(200)
@@ -57,7 +52,6 @@ describe "ThrottleHelper" do
         4.times { get "/throttle-custom-period" }
         expect(last_response.status).to eq(429)
       end
-
     end
 
     it "throws an error if period or limit is missing" do
@@ -71,15 +65,42 @@ describe "ThrottleHelper" do
       expect(last_response.status).to eq(200)
     end
 
+    context "when condition is present" do
+      subject(:app) do
+        Class.new(Grape::API) do
+          use Grape::Middleware::ThrottleMiddleware, cache: Redis.new, if: -> { ENV.fetch("RACK_ENV").eql?("prd") }
+
+          throttle daily: 1
+          get('/throttle') do
+            "step on it"
+          end
+        end
+      end
+
+      it "is throttled beyond the rate limit" do
+        2.times { get "/throttle" }
+        expect(last_response.status).to eq(429)
+      end
+
+      context "when condition is not fulfilled" do
+        before { ENV["RACK_ENV"] = "prd" }
+
+        it "is not throttled" do
+          2.times { get "/throttle" }
+          expect(last_response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "requests just below the period" do
-    it "do not get throttled by the rate limit" do
-      4.times do
-        get "/really-short-throttle"
-        sleep 1
-      end
+    let(:now) { Time.now.utc }
 
+    it "do not get throttled by the rate limit" do
+      Timecop.freeze(now - 1) do
+        3.times { get "/really-short-throttle" }
+      end
+      get "/really-short-throttle"
       expect(last_response.status).to eq(200)
     end
   end
@@ -94,6 +115,5 @@ describe "ThrottleHelper" do
       get "/throttle"
       expect(last_response.status).to eq(200)
     end
-
   end
 end

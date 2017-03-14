@@ -11,13 +11,16 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rack-test'
   s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'rspec-timecop', '~> 0.3'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'fakeredis', '~> 0.5.0'
 
   s.add_runtime_dependency 'grape', '>= 0.10.0'
   s.add_runtime_dependency 'redis', '~>3.2'
 
-  s.files = ["lib/grape-throttle.rb", "lib/grape/extensions/throttle_extension.rb", "lib/grape/middleware/throttle_middleware.rb"]
+  s.files = ["lib/grape-throttle.rb",
+             "lib/grape/extensions/throttle_extension.rb",
+             "lib/grape/middleware/throttle_middleware.rb"]
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ['lib']
 end
